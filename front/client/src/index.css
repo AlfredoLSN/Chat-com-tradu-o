@@ -1,0 +1,29 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Helvetica Neue',Arial, Helvetica, sans-serif;
+}
+
+body {
+    max-height: 100vh;
+    max-width: 100vh;
+    overflow: hidden;
+}
+
+body, button, input {
+    font-family: "Josefin Sans", sans-serif;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
