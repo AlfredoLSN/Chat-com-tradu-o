@@ -6,13 +6,17 @@
 }
 
 body {
-    max-height: 100vh;
-    max-width: 100vh;
-    overflow: hidden;
+    background-color: #131324;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 body, button, input {
     font-family: "Josefin Sans", sans-serif;
+}
+
+label {
+    font-size: small;
 }
 
 .container {

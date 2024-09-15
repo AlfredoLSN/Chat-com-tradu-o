@@ -1,33 +1,57 @@
+span {
+    color: rgb(192, 192, 192);
+    font-size: small;
+    a {
+      color: rgb(29, 73, 219); 
+      text-decoration: none; 
+    }
+}
+
+
+
 .formContainer {
-    height: 100vh;
+    min-height: 100vh;
     width: 100vw;
-    padding: 2rem;
+    padding: 1rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 1rem;
     align-items: center;
     background-color: #131324;
+    background-image: url("./assets/Leonardo_Phoenix.jpg");
+    background-size: cover;
+    background-position: center; 
+    background-repeat: no-repeat;
+    animation: moveBackground 20s infinite alternate;
     color: aliceblue;
+}
+
+@keyframes moveBackground {
+    0% {
+      background-position: center;
+    }
+    100% {
+      background-position: center top;
+    }
 }
 
 .form-login-group {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2rem;
-    background-color: #00000076;
+    gap: 1rem;
+    background-color: #000000c0;
     border-radius: 2rem;
-    padding: 4rem 2rem;
-    margin: 5rem;
+    padding: 1rem 1rem;
     width: max-content;
+    height: max-content;
 }
 
 .form-field {
     background-color: transparent;
-    padding: 1rem;
+    padding: 0.8rem;
     margin-top: 0.4rem;
-    margin-bottom: 1rem;
     color: rgb(238, 63, 200);
     border: 0.1rem solid #eb0eff;
     border-radius: 0.4rem;
@@ -53,4 +77,11 @@
         background: linear-gradient(122deg, #e64d57 0.01%, #963ad3 49.90%, #3b77d8 100%);
         font-weight: 600;
     }
+}
+
+.msgError{
+    color: rgba(240, 121, 23, 0.884);
+    font-size: small;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
 }
