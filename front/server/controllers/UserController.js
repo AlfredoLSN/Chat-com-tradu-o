@@ -1,4 +1,4 @@
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const UserModel = require('../models/UserModel');
 const e = require("express");
 
@@ -11,7 +11,10 @@ module.exports.login = async (req, res) => {
             return res.status(404).json({message: "Usuario nao encontrado."});
         }
 
-        if(user.password !== password) {
+        const hashedPassword = await bcrypt.hash(password.toString(), 10);
+        const valid = await bcrypt.compare(password.toString(), hashedPassword);
+
+        if(!valid) {
             return res.status(401).json({message: "Credenciais invalidas."});
         }
         delete user.password;
@@ -32,10 +35,12 @@ module.exports.register = async (req, res) => {
         if(confirmEmail)
             return res.json({msg:"email ja cadastrado."});
 
+        const hashedPassword = await bcrypt.hash(password.toString(), 10);
+
         const newUser = UserModel.create({
             email,
             username,
-            password,
+            password: hashedPassword,
         });
         delete newUser.password;
         return res.status(201).json(newUser);

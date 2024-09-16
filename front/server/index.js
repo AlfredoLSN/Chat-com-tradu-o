@@ -6,7 +6,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const mongoURI = "mongodb://mongo:sFvLbFdDFFXRtuIpAzKDBoufAjvMfwHC@autorack.proxy.rlwy.net:27452";
+const mongoURI = "mongodb://localhost:27017/chatapp";
 
 // Conectar ao MongoDB
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
