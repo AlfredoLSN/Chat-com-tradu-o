@@ -49,6 +49,7 @@ app.post("/login", async (req, res) => {
         res.status(200).send({
             userId: user._id,
             username: user.username,
+            language: user.language,
             rooms,
         });
     } catch (error) {
