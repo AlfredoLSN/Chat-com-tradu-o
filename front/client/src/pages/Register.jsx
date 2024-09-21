@@ -45,19 +45,18 @@ export default function Register() {
         event.preventDefault();
         
         if (handleValidation()) {
-            const{username, email, preferredLanguage, password} = values;
+            const{username, email, password, preferredLanguage} = values;
            
             try {
                 const {data} = await axios.post(registerRoute, {
                     username,
                     email,
-                    preferredLanguage,
                     password,
+                    preferredLanguage,
                 });
+
+                navigate('/');
                 
-                if(data.status === true) {
-                    navigate('/')
-                }
             } catch (error) {
                 setMsg(error.response.data.msg);
             }

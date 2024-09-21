@@ -30,11 +30,9 @@ export default function Login() {
                     password,
                 });
                 
-                if(data.status === true) {
-                    localStorage.setItem("user", JSON.stringify(data.userObj));
-                    navigate("/chat");
-                }
-
+                localStorage.setItem("user", JSON.stringify(data));
+                navigate("/chat");
+                
             } catch (error) {
                 setMsg(error.response.data.msg);
             }   
