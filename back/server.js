@@ -14,6 +14,7 @@ const io = new Server(server);
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 mongoose
     .connect("mongodb://localhost:27017/chat")
     .then(() => {
@@ -27,7 +28,7 @@ mongoose
 app.post("/register", async (req, res) => {
     const { username, email, password, language } = req.body;
     try {
-        const user = new User({ username, password });
+        const user = new User({ username, email, password, language });
         await user.save();
         res.status(201).send("Usuário registrado com sucesso.");
     } catch (error) {
