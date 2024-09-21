@@ -19,29 +19,32 @@ span {
     gap: 1rem;
     align-items: center;
     background-color: #131324;
-    background-image: url("./assets/Leonardo_Phoenix.jpg");
+    /*background-image: url("./assets/Leonardo_Phoenix_Create_a_highresolution_background_image_for_2.jpg");
     background-size: cover;
-    background-position: center; 
+    background-position: center;
     background-repeat: no-repeat;
-    animation: moveBackground 20s infinite alternate;
+    animation: zoomBackground 30s ease-in-out infinite;*/
     color: aliceblue;
 }
-
-@keyframes moveBackground {
+/*
+@keyframes zoomBackground {
     0% {
-      background-position: center;
+        background-size: 100%;
+    }
+    50% {
+        background-size: 105%;
     }
     100% {
-      background-position: center top;
+        background-size: 100%;
     }
 }
-
+*/
 .form-login-group {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-    background-color: #000000c0;
+    background-color: #00000091;
     border-radius: 2rem;
     padding: 1rem 1rem;
     width: max-content;

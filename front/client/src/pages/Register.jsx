@@ -1,88 +1,144 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from 'axios';
+import { registerRoute } from "../utils/APIRoutes";
+import languagesData from "../data/languages.json";
 
 export default function Register() {
-    const[values, setvalue] = useState({
+    const navigate = useNavigate();
+    const [values, setValues] = useState({
         email: "",
         username: "",
+        preferredLanguage: "",
         password: "",
         confirmPassword: ""
     });
-    const [msgErroEmail, setMsgErroEmail] = useState('');
-    const [msgErroPassword, setMsgErroPassword] = useState('');
-    const [msgErroUsername, setMsgErroUsername] = useState('');
-    const [msgErroConfirmPassword, setMsgErroConfirmPassword] = useState('');
 
-    const handleSubmit = (event) => {
+    const [errors, setErrors] = useState({
+        email: '',
+        username: '',
+        password: '',
+        confirmPassword: ''
+    });
+
+    const [languages, setLanguages] = useState([]);
+    const [msg, setMsg] = useState('');
+
+    useEffect(() => {
+        setLanguages(languagesData);
+    }, []);
+    
+    /*
+    useEffect(() => {
+        const fetchLanguages = async () => {
+            try {
+                const response = await axios.get('https://api.deepl.com/v2/languages');
+                setLanguages(response.data); 
+            } catch (error) {
+                console.error("Erro ao buscar idiomas", error);
+            }
+        };
+        fetchLanguages();
+    }, []);
+*/
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        handleValidation();
+        
+        if (handleValidation()) {
+            const{username, email, preferredLanguage, password} = values;
+           
+            try {
+                const {data} = await axios.post(registerRoute, {
+                    username,
+                    email,
+                    preferredLanguage,
+                    password,
+                });
+                
+                if(data.status === true) {
+                    navigate('/')
+                }
+            } catch (error) {
+                setMsg(error.response.data.msg);
+            }
+        }
     }
 
     const handleValidation = () => {
-        const {email, username, password, confirmPassword} = values;
+        const { email, username, password, confirmPassword } = values;
         const regex = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/;
+        let newErrors = {}; 
 
-
-        if(username === '' || username.length < 3){
-            setMsgErroUsername('Nome de usuário muito curto!');
-            return false;
+        if (username === '' || username.length < 3) {
+            newErrors.username = 'Nome de usuário muito curto!';
         }
-        
+
         if (email === '' || !regex.test(email.toLowerCase())) {
-            setMsgErroEmail('Esse e-mail é inválido.');
-            return false;
+            newErrors.email = 'Esse e-mail é inválido.';
         }
 
-        if(password === '' || password.length < 4){
-            setMsgErroPassword('Senha muito curta!');
-            return false;
+        if (password === '' || password.length < 4) {
+            newErrors.password = 'Senha muito curta!';
         }
 
-        if(confirmPassword !== password){
-            setMsgErroConfirmPassword('As senhas não coincidem!');
-            return false;
+        if (confirmPassword !== password) {
+            newErrors.confirmPassword = 'As senhas não coincidem!';
         }
 
-        return true;
+        setErrors(newErrors);
 
+        return Object.keys(newErrors).length === 0;
     }
 
     const handleChange = (event) => {
-        setvalue({...values,[event.target.name]: event.target.value,});
+        setValues({ ...values, [event.target.name]: event.target.value });
+        setErrors({ ...errors, [event.target.name]: '' });
+        setMsg('');
     }
 
     return (
-        <div className="formContainer">         
-            <form className="form-login-group" onSubmit={(event) => handleSubmit(event)}>
+        <div className="formContainer">
+            <form className="form-login-group" onSubmit={handleSubmit}>
                 <h1>Chat</h1>
+                <span className="msgError">{msg}</span>
                 <div className="flex-column">
                     <label htmlFor="username">Username</label>
-                    <input id="username" name="username" className="form-field" placeholder="username" onChange={(e) => {handleChange(e), setMsgErroUsername('')}}/>
-                    <span className="msgError">{msgErroUsername}</span>
+                    <input id="username" name="username" className="form-field" placeholder="username" onChange={handleChange} />
+                    <span className="msgError">{errors.username}</span>
                 </div>
                 <div className="flex-column">
                     <label htmlFor="email">Email</label>
-                    <input id="email" name="email" className="form-field" placeholder="name@host.com" onChange={(e) => {handleChange(e), setMsgErroEmail('')}}/>
-                    <span className="msgError">{msgErroEmail}</span>
+                    <input id="email" name="email" className="form-field" placeholder="name@host.com" onChange={handleChange} />
+                    <span className="msgError">{errors.email}</span>
+                </div>
+                <div className="flex-column">
+                    <label htmlFor="preferredLanguage">Preferred Language</label>
+                    <select id="preferredLanguage" name="preferredLanguage" className="form-field" onChange={handleChange}>
+                        <option value="">Select Language</option>
+                        {languages.map((language) => (
+                            <option key={language.language} value={language.language}> {language.name}</option>
+                        ))}
+                    </select>
+
+                    <span className="msgError">{errors.preferredLanguage}</span>
                 </div>
                 <div className="flex-column">
                     <label htmlFor="password">Password</label>
-                    <input id="password" name="password" className="form-field" type="password" placeholder="Password" onChange={(e) => {handleChange(e), setMsgErroPassword('')}}/>
-                    <span className="msgError">{msgErroPassword}</span>
+                    <input id="password" name="password" className="form-field" type="password" placeholder="Password" onChange={handleChange} />
+                    <span className="msgError">{errors.password}</span>
                 </div>
                 <div className="flex-column">
                     <label htmlFor="confirmPassword">Confirm Password</label>
-                    <input id="confirmPassword" name="confirmPassword" className="form-field" type="password" placeholder="Confirm Password" onChange={(e) => {handleChange(e), setMsgErroConfirmPassword('')}}/>
-                    <span className="msgError">{msgErroConfirmPassword}</span>
+                    <input id="confirmPassword" name="confirmPassword" className="form-field" type="password" placeholder="Confirm Password" onChange={handleChange} />
+                    <span className="msgError">{errors.confirmPassword}</span>
                 </div>
 
                 <button className="button-submit-form" type="submit">Sign up</button>
 
                 <div>
-                    <span>Já possui uma conta? <Link to={'/login'}>Login</Link> </span>
+                    <span>Já possui uma conta? <Link to={'/'}>Login</Link> </span>
                 </div>
             </form>
         </div>
-    )
+    );
 }

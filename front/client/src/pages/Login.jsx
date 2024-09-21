@@ -1,26 +1,51 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import axios from "axios";
+import { loginRoute } from "../utils/APIRoutes";
+
 
 export default function Login() {
+
+    const navigate = useNavigate();
+
     const[values, setvalue] = useState({
-        email: "",
+        emailOrUsername: "",
         password: "",
     });
+
     const [msgErroEmail, setMsgErroEmail] = useState('');
     const [msgErroPassword, setMsgErroPassword] = useState('');
+    const [msg, setMsg] = useState('');
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        handleValidation();
+
+        if(handleValidation()) {
+            const {emailOrUsername, password} = values;
+
+            try {
+                const { data } = await axios.post(loginRoute, {
+                    emailOrUsername,
+                    password,
+                });
+                
+                if(data.status === true) {
+                    localStorage.setItem("user", JSON.stringify(data.userObj));
+                    navigate("/chat");
+                }
+
+            } catch (error) {
+                setMsg(error.response.data.msg);
+            }   
+        }
     }
 
-    const handleValidation = () => {
-        const {email, password} = values;
-        const regex = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/;
-
-        if (email === '' || !regex.test(email.toLowerCase())) {
-            setMsgErroEmail('Esse e-mail é inválido.');
+    const handleValidation = async () => {
+        const {emailOrUsername, password} = values;
+        
+        if (emailOrUsername === '' || emailOrUsername.length < 3) {
+            setMsgErroEmail('Nome de usuario ou email inválido.');
             return false;
         }
 
@@ -28,22 +53,22 @@ export default function Login() {
             setMsgErroPassword('Senha muito curta!');
             return false;
         }
-
         return true;
-
     }
 
     const handleChange = (event) => {
         setvalue({...values,[event.target.name]: event.target.value,});
+        setMsg('');
     }
     return (
         <div className="formContainer">
             
             <form className="form-login-group" onSubmit={(event) => handleSubmit(event)}>
                 <h1>Chat</h1>
+                <span className="msgError">{msg}</span>
                 <div className="flex-column">
-                    <label htmlFor="email">Email</label>
-                    <input id="email" name="email" className="form-field" placeholder="name@host.com" onChange={(e) => {handleChange(e), setMsgErroEmail('')}}/>
+                    <label htmlFor="emailOrUsername">Email or Username</label>
+                    <input id="emailOrUsername" name="emailOrUsername" className="form-field" placeholder="Email or Username" onChange={(e) => {handleChange(e), setMsgErroEmail('')}}/>
                     <span className="msgError">{msgErroEmail}</span>
                 </div>
                 <div className="flex-column">
