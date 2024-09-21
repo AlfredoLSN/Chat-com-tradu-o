@@ -5,11 +5,13 @@ const { Server } = require("socket.io");
 const mongoose = require("mongoose");
 const Room = require("./models/Room");
 const User = require("./models/User");
+const cors = require("cors");
 // Configurações
 const app = express();
 const server = createServer(app);
 const io = new Server(server);
 
+app.use(cors());
 mongoose
     .connect("mongodb://localhost:27017/chat")
     .then(() => {
