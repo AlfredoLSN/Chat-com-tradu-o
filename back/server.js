@@ -14,6 +14,7 @@ const io = new Server(server);
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 mongoose
     .connect("mongodb://localhost:27017/chat")
     .then(() => {
