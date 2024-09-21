@@ -40,13 +40,33 @@ app.post("/login", async (req, res) => {
             return res.status(401).send("Credenciais inválidas.");
         }
         // Retornar o ID do usuário para o frontend, que usará para identificar a conexão
+        const rooms = await Room.find({ users: user._id });
         res.status(200).send({
             userId: user._id,
             username: user.username,
-            language: user.language,
+            rooms,
         });
     } catch (error) {
         res.status(400).send("Erro ao fazer login: " + error.message);
+    }
+});
+
+app.post("/createRoom", async (req, res) => {
+    const { roomName, userId } = req.body;
+    try {
+        // Verifica se a sala já existe
+        let room = await Room.findOne({ name: roomName });
+        if (room) {
+            return res.status(400).send("Sala já existe.");
+        }
+
+        // Cria uma nova sala e adiciona o usuário à lista de usuários
+        room = new Room({ name: roomName, users: [userId] });
+        await room.save();
+
+        res.status(201).send(`Sala '${roomName}' criada com sucesso.`);
+    } catch (error) {
+        res.status(500).send("Erro ao criar a sala: " + error.message);
     }
 });
 
@@ -78,8 +98,12 @@ io.on("connection", (socket) => {
                 console.log("Sala não Encontrada");
             }
             // Adiciona o usuário à sala no MongoDB
-            room.users.push(socket.id);
-            await room.save();
+            //room.users.push(socket.id);
+            //await room.save();
+            if (!room.users.includes(socket.userId)) {
+                room.users.push(socket.userId);
+                await room.save();
+            }
             socket.join(roomName);
             console.log(`Usuario ${socket.userId} entrou na sala: ${roomName}`);
             io.to(roomName).emit("message", `Usuário entrou na sala.`);
