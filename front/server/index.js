@@ -20,7 +20,7 @@ mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
 
 const userRoutes = require("./routes/UserRoute");
 
-app.use("/api",userRoutes);
+app.use("/api/user",userRoutes);
 
 
 app.listen(3000, ()=>{

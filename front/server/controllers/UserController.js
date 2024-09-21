@@ -1,24 +1,26 @@
 const bcrypt = require("bcryptjs");
 const UserModel = require('../models/UserModel');
-const e = require("express");
 
 module.exports.login = async (req, res) => {
     try {
-        const{username, password} = req.body;
-        const user = await UserModel.findOne({username});
+        const{emailOrUsername, password} = req.body;
+        //procura pelo nome de usuário ou email passado como parâmetro
+        const user = await UserModel.findOne({$or:[{username:emailOrUsername}, {email:emailOrUsername}]});
 
         if(!user) {
-            return res.status(404).json({message: "Usuario nao encontrado."});
+            return res.status(404).json({msg: "Usuario nao encontrado."});
         }
 
-        const hashedPassword = await bcrypt.hash(password.toString(), 10);
-        const valid = await bcrypt.compare(password.toString(), hashedPassword);
+        const valid = await bcrypt.compare(password.toString(), user.password);
 
         if(!valid) {
-            return res.status(401).json({message: "Credenciais invalidas."});
+            return res.status(401).json({msg: "Credenciais invalidas."});
         }
-        delete user.password;
-        return res.status(200).json(user);
+
+        const userObj = user.toObject();
+        delete userObj.password;
+       
+        return res.status(200).json({userObj, msg: "login realizado", status: true});
     } catch (error) {
         error.status = 500;
     }
@@ -26,24 +28,24 @@ module.exports.login = async (req, res) => {
 
 module.exports.register = async (req, res) => {
     try {
-        const{username, email, password} = req.body;
+        const{username, email, password, preferredLanguage} = req.body;
         const confirmUsername = await UserModel.findOne({username});
         if(confirmUsername)
-            return res.json({ msg: "Usuario ja existe", status: false });
+            return res.status(400).json({ msg: "Usuario ja existe"});
 
         const confirmEmail = await UserModel.findOne({email});
         if(confirmEmail)
-            return res.json({msg:"email ja cadastrado."});
+            return res.status(400).json({msg:"email ja cadastrado."});
 
         const hashedPassword = await bcrypt.hash(password.toString(), 10);
 
-        const newUser = UserModel.create({
+        const newUser = await UserModel.create({
             email,
             username,
+            preferredLanguage,
             password: hashedPassword,
         });
-        delete newUser.password;
-        return res.status(201).json(newUser);
+        return res.status(201).json({msg:"usuario cadastrado com sucesso.", status: true});
     } catch (error) {
         error.status = 500;
     }
