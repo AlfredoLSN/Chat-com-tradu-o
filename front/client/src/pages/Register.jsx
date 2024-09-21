@@ -54,6 +54,7 @@ export default function Register() {
                     password,
                     preferredLanguage,
                 });
+                console.log(data);
 
                 navigate('/');
                 
