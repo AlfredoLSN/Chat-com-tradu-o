@@ -10,7 +10,7 @@ export default function Login() {
     const navigate = useNavigate();
 
     const[values, setvalue] = useState({
-        emailOrUsername: "",
+        username: "",
         password: "",
     });
 
@@ -22,15 +22,16 @@ export default function Login() {
         event.preventDefault();
 
         if(handleValidation()) {
-            const {emailOrUsername, password} = values;
+            const {username, password} = values;
 
             try {
                 const { data } = await axios.post(loginRoute, {
-                    emailOrUsername,
+                    username,
                     password,
                 });
                 
                 localStorage.setItem("user", JSON.stringify(data));
+                console.log('teste')
                 navigate("/chat");
                 
             } catch (error) {
@@ -40,9 +41,9 @@ export default function Login() {
     }
 
     const handleValidation = async () => {
-        const {emailOrUsername, password} = values;
+        const {username, password} = values;
         
-        if (emailOrUsername === '' || emailOrUsername.length < 3) {
+        if (username === '' || username.length < 3) {
             setMsgErroEmail('Nome de usuario ou email inválido.');
             return false;
         }
@@ -65,8 +66,8 @@ export default function Login() {
                 <h1>Chat</h1>
                 <span className="msgError">{msg}</span>
                 <div className="flex-column">
-                    <label htmlFor="emailOrUsername">Email or Username</label>
-                    <input id="emailOrUsername" name="emailOrUsername" className="form-field" placeholder="Email or Username" onChange={(e) => {handleChange(e), setMsgErroEmail('')}}/>
+                    <label htmlFor="username">Email or Username</label>
+                    <input id="username" name="username" className="form-field" placeholder="Email or Username" onChange={(e) => {handleChange(e), setMsgErroEmail('')}}/>
                     <span className="msgError">{msgErroEmail}</span>
                 </div>
                 <div className="flex-column">

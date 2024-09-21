@@ -9,7 +9,7 @@ export default function Register() {
     const [values, setValues] = useState({
         email: "",
         username: "",
-        preferredLanguage: "",
+        language: "",
         password: "",
         confirmPassword: ""
     });
@@ -45,18 +45,18 @@ export default function Register() {
         event.preventDefault();
         
         if (handleValidation()) {
-            const{username, email, password, preferredLanguage} = values;
+            const{username, email, password, language} = values;
            
             try {
                 const {data} = await axios.post(registerRoute, {
                     username,
                     email,
                     password,
-                    preferredLanguage,
+                    language,
                 });
                 console.log(data);
 
-                navigate('/');
+                navigate("/");
                 
             } catch (error) {
                 setMsg(error.response.data.msg);
@@ -112,15 +112,15 @@ export default function Register() {
                     <span className="msgError">{errors.email}</span>
                 </div>
                 <div className="flex-column">
-                    <label htmlFor="preferredLanguage">Preferred Language</label>
-                    <select id="preferredLanguage" name="preferredLanguage" className="form-field" onChange={handleChange}>
+                    <label htmlFor="language">Preferred Language</label>
+                    <select id="language" name="language" className="form-field" onChange={handleChange}>
                         <option value="">Select Language</option>
                         {languages.map((language) => (
                             <option key={language.language} value={language.language}> {language.name}</option>
                         ))}
                     </select>
 
-                    <span className="msgError">{errors.preferredLanguage}</span>
+                    <span className="msgError">{errors.language}</span>
                 </div>
                 <div className="flex-column">
                     <label htmlFor="password">Password</label>
