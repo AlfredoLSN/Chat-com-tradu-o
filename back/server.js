@@ -119,7 +119,11 @@ io.on("connection", (socket) => {
             }
             socket.join(roomName);
             console.log(`Usuario ${socket.userId} entrou na sala: ${roomName}`);
-            io.to(roomName).emit("message", `Usuário entrou na sala.`);
+            io.to(roomName).emit("message", {
+                userId: "Geral",
+                message: "Saiu da sala",
+                language,
+            });
             console.log("qualquer coisa");
         } catch (error) {
             console.error("Erro ao entrar na sala:", error);
@@ -145,14 +149,18 @@ io.on("connection", (socket) => {
                 console.log(
                     `Usuário ${socket.userId} saiu da sala: ${roomName}`
                 );
-                io.to(roomName).emit("message", `Usuário saiu da sala.`);
+                io.to(roomName).emit("message", {
+                    userId: "Geral",
+                    message: "Saiu da sala",
+                    language,
+                });
             }
         } catch (error) {
             console.error("Erro ao sair da sala:", error);
         }
     });
 
-    socket.on("chatMessage", async ({ roomName, message }) => {
+    socket.on("chatMessage", async ({ roomName, message, language }) => {
         if (!socket.userId) {
             return;
         }
@@ -160,7 +168,11 @@ io.on("connection", (socket) => {
             console.log(
                 `Mensagem na sala ${roomName} de ${socket.userId}: ${message}`
             );
-            io.to(roomName).emit("message", { userId: socket.userId, message }); // Envia a mensagem para todos na sala
+            io.to(roomName).emit("message", {
+                userId: socket.userId,
+                message,
+                language,
+            }); // Envia a mensagem para todos na sala
         } catch (error) {
             console.error("Erro ao enviar mensagem:", error);
             socket.emit("error", "Erro ao enviar mensagem.");
