@@ -9,7 +9,15 @@ const cors = require("cors");
 // Configurações
 const app = express();
 const server = createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+    cors: {
+        origin: "*",  // Permite todas as origens
+        methods: ["GET", "POST"],
+        allowedHeaders: ["my-custom-header"],
+        credentials: true
+    }
+});
+
 
 app.use(cors());
 app.use(express.json());
@@ -113,6 +121,7 @@ io.on("connection", (socket) => {
             socket.join(roomName);
             console.log(`Usuario ${socket.userId} entrou na sala: ${roomName}`);
             io.to(roomName).emit("message", `Usuário entrou na sala.`);
+            console.log("qualquer coisa")
         } catch (error) {
             console.error("Erro ao entrar na sala:", error);
         }
