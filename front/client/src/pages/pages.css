@@ -19,7 +19,7 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        width: 75%;
+        width: 55vw;
         background-color: rgb(211, 207, 207);
         border-top-left-radius: 1rem;
         border-bottom-left-radius: 1rem;
@@ -29,6 +29,42 @@
         border-top-right-radius: 1rem;
         border-bottom-right-radius: 1rem;
         background-color: rgb(194, 188, 181);
-        width: 20vw;
+        width: 25vw;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow-x: hidden;
+        overflow-y: auto;
+
+        h3 {
+            display: block;
+            box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1),0px 10px 15px -3px rgba(0,0,0,0.1);
+            width: 100%;
+            text-align: center;
+            position: relative;
+            padding: 5px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+    }
+
+    .cardChat {
+        width: 100%;
+        background-color: rgb(208, 214, 219);
+        padding: 5px;
+        margin: 2px;
+        text-transform: uppercase;
+        font-size: small;
+        font-weight:700;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        border-radius: 0.2rem;
+
+        &:hover {
+            background-color: rgb(145, 109, 146);
+            color: rgb(29, 171, 236);
+        }
+        
     }
 }

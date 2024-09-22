@@ -9,7 +9,15 @@ const cors = require("cors");
 // Configurações
 const app = express();
 const server = createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+    cors: {
+        origin: "*",  // Permite todas as origens
+        methods: ["GET", "POST"],
+        allowedHeaders: ["my-custom-header"],
+        credentials: true
+    }
+});
+
 
 app.use(cors());
 app.use(express.json());
@@ -87,6 +95,7 @@ io.on("connection", (socket) => {
                 //TODO
             }
             socket.userId = userId;
+            console.log(socket.userId);
             console.log(`Usuario autenticado ${user.name}`);
         } catch (error) {
             console.log("Erro na autenticação");

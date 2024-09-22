@@ -13,7 +13,8 @@ export default function MessageInput({ socket, currentRoom }) {
                 room: currentRoom,
                 timestamp: Date.now()
             };
-            socket.emit("sendMessage", newMessage);  // Emitir mensagem para a sala
+            socket.emit("message", newMessage);  // Emitir mensagem para a sala
+            console.log(newMessage)
             setMessage('');  // Limpa 
         }
     }

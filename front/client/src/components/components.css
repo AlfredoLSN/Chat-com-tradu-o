@@ -15,18 +15,18 @@
 
 .messageInput {
     flex: 1;
-    padding: 10px;
+    padding: 12px;
     border-radius: 5px;
     border: 1px solid #ccc;
     margin-right: 0.2vw;
-    width: 88%;
+    width: 46vw;
     margin-top: 5px;
     margin-bottom: 5px;
     margin-left: 5px;
 }
 
 .sendMessage {
-    padding: 10px 20px;
+    padding: 12px 20px;
     background-color: #12d463;
     color: #1d1c1c;
     font-weight: 400;

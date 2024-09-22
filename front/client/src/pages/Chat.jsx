@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import MessageInput from "../components/MessageInput";
 import "../pages/pages.css";
-
+import img1 from "../assets/comments-solid.svg"
 
 //TESTE
 import io from "socket.io-client";
@@ -19,23 +19,25 @@ export default function Chat() {
         if (user && user.rooms) {
             setRooms(user.rooms);
         }
+
+        socket.emit("authenticate", user.userId);
     }, []);
 
     useEffect(() => {
-        if (currentRoom) {
-            // Ouvir novas mensagens
-            socket.on("message", (message) => {
-                setMessages((prevMessages) => [...prevMessages, message]);
-            });
+        
+        socket.emit("joinRoom", (message) => {
+            console.log("Mensagem recebida agora:", message);
+            setMessages((prevMessages) => [...prevMessages, message]);
+        });
 
-            // Limpeza ao sair da sala
-            return () => socket.off("message");
-        }
+        // Limpeza ao sair da sala
+        return () => socket.off("message");
     }, [currentRoom]);
 
     const handleRoomClick = (roomName) => {
         setCurrentRoom(roomName);  // Define a sala atual
         socket.emit("joinRoom", roomName);  // Conecta-se à sala
+        console.log(roomName)
     };
 
     return(
@@ -57,7 +59,8 @@ export default function Chat() {
                 <aside>
                     <h3>Salas</h3>
                     {rooms.map(room => (
-                        <div key={room._id} onClick={() => handleRoomClick(room.name)}>
+                        <div className="cardChat" key={room._id} onClick={() => handleRoomClick(room.name)}>
+                            <img src={img1} style={{width:'25px', margin:"8px"}}/>
                             {room.name}    
                         </div>
                     ))}
