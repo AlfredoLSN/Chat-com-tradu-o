@@ -144,6 +144,21 @@ io.on("connection", (socket) => {
         }
     });
 
+    socket.on("chatMessage", async ({ roomName, message }) => {
+        if (!socket.userId) {
+            return;
+        }
+        try {
+            console.log(
+                `Mensagem na sala ${roomName} de ${socket.userId}: ${message}`
+            );
+            io.to(roomName).emit("message", { userId: socket.userId, message }); // Envia a mensagem para todos na sala
+        } catch (error) {
+            console.error("Erro ao enviar mensagem:", error);
+            socket.emit("error", "Erro ao enviar mensagem.");
+        }
+    });
+
     // Desconexão do usuário
     socket.on("disconnect", () => {
         console.log("Usuário desconectado:", socket.id);
