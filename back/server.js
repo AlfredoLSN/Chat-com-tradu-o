@@ -66,6 +66,24 @@ app.post("/login", async (req, res) => {
     }
 });
 
+app.get("/rooms", async (req, res) => {
+    try {
+        const rooms = await Room.find();
+        res.status(200).json(rooms);
+    } catch (error) {
+        res.status(400).send("Erro ao obter salas: " + error.message);
+    }
+});
+app.get("/rooms/:userId", async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const rooms = await Room.find({ users: userId });
+        res.status(200).json(rooms);
+    } catch (error) {
+        res.status(400).send("Erro ao obter salas: " + error.message);
+    }
+});
+
 app.post("/createRoom", async (req, res) => {
     const { roomName, userId } = req.body;
     try {
