@@ -100,7 +100,7 @@ io.on("connection", (socket) => {
         }
     });
 
-    socket.on("joinRoom", async ({ roomName, language }) => {
+    socket.on("joinRoom", async ({ roomName, username, language }) => {
         try {
             if (!socket.userId) {
                 return;
@@ -121,7 +121,8 @@ io.on("connection", (socket) => {
             console.log(`Usuario ${socket.userId} entrou na sala: ${roomName}`);
             io.to(roomName).emit("message", {
                 userId: "Geral",
-                message: "Saiu da sala",
+                message: "Entrou na sala",
+                username,
                 language,
             });
             console.log("qualquer coisa");
@@ -160,24 +161,28 @@ io.on("connection", (socket) => {
         }
     });
 
-    socket.on("chatMessage", async ({ roomName, message, language }) => {
-        if (!socket.userId) {
-            return;
+    socket.on(
+        "chatMessage",
+        async ({ roomName, message, username, language }) => {
+            if (!socket.userId) {
+                return;
+            }
+            try {
+                console.log(
+                    `Mensagem na sala ${roomName} de ${socket.userId}: ${message}`
+                );
+                io.to(roomName).emit("message", {
+                    userId: socket.userId,
+                    message,
+                    username,
+                    language,
+                }); // Envia a mensagem para todos na sala
+            } catch (error) {
+                console.error("Erro ao enviar mensagem:", error);
+                socket.emit("error", "Erro ao enviar mensagem.");
+            }
         }
-        try {
-            console.log(
-                `Mensagem na sala ${roomName} de ${socket.userId}: ${message}`
-            );
-            io.to(roomName).emit("message", {
-                userId: socket.userId,
-                message,
-                language,
-            }); // Envia a mensagem para todos na sala
-        } catch (error) {
-            console.error("Erro ao enviar mensagem:", error);
-            socket.emit("error", "Erro ao enviar mensagem.");
-        }
-    });
+    );
 
     // Desconexão do usuário
     socket.on("disconnect", () => {
