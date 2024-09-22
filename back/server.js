@@ -87,7 +87,7 @@ io.on("connection", (socket) => {
                 //TODO
             }
             socket.userId = userId;
-            console.log(`Usuario autenticado ${user.name}`);
+            console.log(`Usuario autenticado ${socket.id}`);
         } catch (error) {
             console.log("Erro na autenticação");
         }
