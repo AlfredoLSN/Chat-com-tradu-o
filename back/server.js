@@ -121,7 +121,7 @@ io.on("connection", (socket) => {
             console.log(`Usuario ${socket.userId} entrou na sala: ${roomName}`);
             io.to(roomName).emit("message", {
                 userId: "Geral",
-                message: "Saiu da sala",
+                message: "Entrou na sala",
                 language,
             });
             console.log("qualquer coisa");
