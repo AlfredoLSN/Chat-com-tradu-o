@@ -67,4 +67,11 @@
         }
         
     }
+
+    .sender {
+        display: block;
+        align-self: flex-end;
+        text-align: end;
+        background-color: red;
+    }
 }
