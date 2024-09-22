@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import MessageInput from "../components/MessageInput";
+import Message from "../components/Message";
 import "../pages/pages.css";
 import img1 from "../assets/comments-solid.svg"
 
@@ -13,6 +14,8 @@ export default function Chat() {
     const [messages, setMessages] = useState([]);
     const [rooms, setRooms] = useState([]); // Salas do usuário
 
+    
+
     useEffect(() => {
         // Obter as salas do usuário
         const user = JSON.parse(localStorage.getItem('user'));
@@ -21,19 +24,24 @@ export default function Chat() {
         }
 
         socket.emit("authenticate", user.userId);
+            
     }, []);
 
+    
     useEffect(() => {
-        
-        socket.emit("joinRoom", (message) => {
-            console.log("Mensagem recebida agora:", message);
-            setMessages((prevMessages) => [...prevMessages, message]);
-        });
+        socket.on("message", async (message) => {
+            setMessages(message);
+            console.log("passou aqui ",message);
+        })
+       // socket.emit("joinRoom", (message) => {
+           // console.log("Mensagem recebida agora:", message);
+            //setMessages((prevMessages) => [...prevMessages, message]);
+        //});
 
         // Limpeza ao sair da sala
-        return () => socket.off("message");
-    }, [currentRoom]);
-
+       // return () => socket.off("message");
+    }, [socket]);
+    
     const handleRoomClick = (roomName) => {
         setCurrentRoom(roomName);  // Define a sala atual
         socket.emit("joinRoom", roomName);  // Conecta-se à sala
@@ -45,14 +53,8 @@ export default function Chat() {
             <div className="container-type-2">
                 <main>
                     <div>
-                        {messages.map((msg, index) => (
-                            <Message 
-                                key={index} 
-                                sender={msg.sender} 
-                                msg={msg.msg} 
-                                currentUser={JSON.parse(localStorage.getItem("user")).username} 
-                            />
-                        ))}
+                        {messages} 
+                        {currentRoom}
                     </div>
                     <MessageInput socket={socket} currentRoom={currentRoom} />
                 </main>
