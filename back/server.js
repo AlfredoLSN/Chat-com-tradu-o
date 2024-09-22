@@ -95,8 +95,7 @@ io.on("connection", (socket) => {
                 //TODO
             }
             socket.userId = userId;
-            console.log(socket.userId);
-            console.log(`Usuario autenticado ${user.name}`);
+            console.log(`Usuario autenticado ${socket.userId}`);
         } catch (error) {
             console.log("Erro na autenticação");
         }
@@ -122,6 +121,7 @@ io.on("connection", (socket) => {
             socket.join(roomName);
             console.log(`Usuario ${socket.userId} entrou na sala: ${roomName}`);
             io.to(roomName).emit("message", `Usuário entrou na sala.`);
+            console.log("qualquer coisa")
         } catch (error) {
             console.error("Erro ao entrar na sala:", error);
         }
