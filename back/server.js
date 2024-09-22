@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const Room = require("./models/Room");
 const User = require("./models/User");
 const cors = require("cors");
+const deepl = require("deepl-node");
 // Configurações
 const app = express();
 const server = createServer(app);
@@ -188,6 +189,17 @@ io.on("connection", (socket) => {
     socket.on("disconnect", () => {
         console.log("Usuário desconectado:", socket.id);
     });
+});
+
+const authKey = "1233c090-3cd2-4ed9-98c9-ee81b3bc5001:fx";
+const translator = new deepl.Translator(authKey);
+
+app.get("/translate", async (req, res) => {
+    const { msg, lang1, lang2 } = req.body;
+    try {
+        const msgTraduzida = await translator.translateText(msg, lang1, lang2);
+        res.send({ msg: msgTraduzida });
+    } catch (error) {}
 });
 
 const PORT = 3333;
