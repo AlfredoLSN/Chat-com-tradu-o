@@ -24,25 +24,20 @@ export default function Chat() {
         socket.on("message", async (data) => {
             const currentUser = JSON.parse(localStorage.getItem("user"));
             const isSender = data.userId === currentUser.userId;
-            const translate = '';
+            let translate = '';
 
 
             console.log("lan1: ", data.language);
             console.log("lan2: ", currentUser.language);
             
             try {
-                translate = await axios.get("http://localhost:3333/translate", {
-                    params: {
-                        msg: data.message,
-                        lang1: data.language,
-                        lang2: currentUser.language,
-                    },
-                });
+                console.log("msg: ", data.message, "lang1: ", data.language, "lang2: ", currentUser.language)
+                translate = await axios.get(`http://localhost:3333/translate/${data.message}/${currentUser.language}`);
 
                 console.log("translate", translate);
                 
                 const newMessage = {
-                    content: translate,
+                    content: translate.data.msg,
                     sender: isSender,
                     type: data.userId,
                     username: data.username,
