@@ -199,7 +199,9 @@ app.get("/translate", async (req, res) => {
     try {
         const msgTraduzida = await translator.translateText(msg, lang1, lang2);
         res.send({ msg: msgTraduzida });
-    } catch (error) {}
+    } catch (error) {
+        console.log("Erro ao traduzir", error);
+    }
 });
 
 const PORT = 3333;
