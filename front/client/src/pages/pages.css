@@ -74,4 +74,10 @@
         text-align: end;
         background-color: red;
     }
+
+    .global {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 }

@@ -196,6 +196,10 @@ const translator = new deepl.Translator(authKey);
 
 app.get("/translate", async (req, res) => {
     const { msg, lang1, lang2 } = req.body;
+
+    console.log("lan1: ", lang1);
+    console.log("lan2: ", lang2);
+
     try {
         const msgTraduzida = await translator.translateText(msg, lang1, lang2);
         res.send({ msg: msgTraduzida });
