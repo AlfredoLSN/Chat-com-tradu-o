@@ -194,10 +194,15 @@ io.on("connection", (socket) => {
 const authKey = "1233c090-3cd2-4ed9-98c9-ee81b3bc5001:fx";
 const translator = new deepl.Translator(authKey);
 
-app.get("/translate", async (req, res) => {
-    const { msg, lang1, lang2 } = req.body;
+app.get("/translate/:msg/:lang1/:lang2", async (req, res) => {
+    const { msg, lang1, lang2 } = req.params;
     try {
-        const msgTraduzida = await translator.translateText(msg, lang1, lang2);
+        console.log(msg, lang1, lang2);
+        const msgTraduzida = await translator.translateText(
+            "" + msg,
+            "" + lang1,
+            "" + lang2
+        );
         res.send({ msg: msgTraduzida });
     } catch (error) {
         console.log("Erro ao traduzir", error);
