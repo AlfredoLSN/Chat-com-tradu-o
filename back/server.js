@@ -198,11 +198,7 @@ app.get("/translate/:msg/:lang1/:lang2", async (req, res) => {
     const { msg, lang1, lang2 } = req.params;
     try {
         console.log(msg, lang1, lang2);
-        const msgTraduzida = await translator.translateText(
-            "" + msg,
-            "" + lang1,
-            "" + lang2
-        );
+        const msgTraduzida = await translator.translateText(msg, lang1, lang2);
         res.send({ msg: msgTraduzida });
     } catch (error) {
         console.log("Erro ao traduzir", error);
