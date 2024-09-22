@@ -100,7 +100,7 @@ io.on("connection", (socket) => {
         }
     });
 
-    socket.on("joinRoom", async (roomName) => {
+    socket.on("joinRoom", async ({ roomName, language }) => {
         try {
             if (!socket.userId) {
                 return;
