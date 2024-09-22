@@ -13,7 +13,7 @@ export default function MessageInput({ socket, currentRoom }) {
                 room: currentRoom,
                 timestamp: Date.now()
             };
-            socket.emit("chatMessage", {roomName : currentRoom, message: newMessage.msg});  // Emitir mensagem para a sala
+            socket.emit("chatMessage", {roomName : currentRoom, message: newMessage.msg, language: currentUser.language});  // Emitir mensagem para a sala
             console.log(newMessage)
             setMessage('');  // Limpa 
         }
