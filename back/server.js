@@ -99,16 +99,16 @@ app.post("/createRoom", async (req, res) => {
         // Verifica se a sala já existe
         let room = await Room.findOne({ name: roomName });
         if (room) {
-            return res.status(400).send("Sala já existe.");
+            return res.status(400).send({ message: "Sala já existe." });
         }
 
         // Cria uma nova sala e adiciona o usuário à lista de usuários
         room = new Room({ name: roomName, users: [userId] });
         await room.save();
 
-        res.status(201).send(`Sala '${roomName}' criada com sucesso.`);
+        res.status(201).json(room);
     } catch (error) {
-        res.status(500).send("Erro ao criar a sala: " + error.message);
+        res.status(500).json({ message: "Erro ao criar sala!" });
     }
 });
 
@@ -121,6 +121,8 @@ io.on("connection", (socket) => {
             const user = await User.findById(userId);
             if (!user) {
                 //TODO
+                console.log("Usuario não encontrado!");
+                return;
             }
             socket.userId = userId;
             console.log(`Usuario autenticado ${socket.userId}`);
@@ -146,16 +148,22 @@ io.on("connection", (socket) => {
             if (!room.users.includes(socket.userId)) {
                 room.users.push(socket.userId);
                 await room.save();
+                socket.join(roomName);
+                console.log(
+                    `Usuario ${socket.userId} entrou na sala: ${roomName}`
+                );
+                io.to(roomName).emit("message", {
+                    userId: "Geral",
+                    message: "Entrou na sala",
+                    username,
+                    language,
+                });
+                return;
             }
             socket.join(roomName);
-            console.log(`Usuario ${socket.userId} entrou na sala: ${roomName}`);
-            io.to(roomName).emit("message", {
-                userId: "Geral",
-                message: "Entrou na sala",
-                username,
-                language,
-            });
-            console.log("qualquer coisa");
+            console.log(
+                `Usuario ${socket.userId} já está na sala: ${roomName}`
+            );
         } catch (error) {
             console.error("Erro ao entrar na sala:", error);
         }
@@ -223,9 +231,9 @@ io.on("connection", (socket) => {
 const authKey = "1233c090-3cd2-4ed9-98c9-ee81b3bc5001:fx";
 const translator = new deepl.Translator(authKey);
 
-app.get("/translate/:msg/:lang2", async (req, res) => {
+app.post("/translate/", async (req, res) => {
     try {
-        const { msg, lang2 } = req.params;
+        const { msg, lang2 } = req.body;
         console.log(typeof lang2);
         const msgTraduzida = await translator.translateText(msg, null, lang2);
         res.send({ msg: msgTraduzida.text });

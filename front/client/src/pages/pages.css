@@ -72,10 +72,17 @@
         display: block;
         align-self: flex-end;
         text-align: end;
-        background-color: red;
+        margin-right: 5px;
     }
 
-    .global {
+    .reciver {
+        display: block;
+        align-self: flex-start;
+        text-align: start;
+        margin-left: 5px;
+    }
+
+    .global2 {
         display: flex;
         justify-content: center;
         align-items: center;

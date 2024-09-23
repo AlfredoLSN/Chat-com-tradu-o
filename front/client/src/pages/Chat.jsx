@@ -12,6 +12,7 @@ export default function Chat() {
     const [messages, setMessages] = useState([]);
     const [rooms, setRooms] = useState([]);
     const [searchRoom, setSearchRoom] = useState('');
+    const [createRoom, setCreateRoom] = useState('');
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
@@ -33,7 +34,10 @@ export default function Chat() {
             
             try {
                 console.log("msg: ", data.message, "lang1: ", data.language, "lang2: ", currentUser.language)
-                translate = await axios.get(`http://localhost:3333/translate/${data.message}/${currentUser.language}`);
+                translate = await axios.post(`http://localhost:3333/translate`,{
+                    msg: data.message,
+                    lang2: currentUser.language
+                });
 
                 console.log("translate", translate);
                 
@@ -67,6 +71,7 @@ export default function Chat() {
 
             try {
                 let roomSearch = await axios.get(`http://localhost:3333/room/${searchRoom}`);
+                console.log("Axios retorno: ", roomSearch)
                 let rooms = roomSearch.data;                 
                 if(rooms.length === 0) {
                     window.alert("Sala não encontrada!");
@@ -81,8 +86,6 @@ export default function Chat() {
                     window.alert("Você já está na sala.");
                     return
                 }
-                socket.emit("joinRoom", {roomName: rooms[0].name, username: user.username, language: user.language});
-
                 setRooms((set) =>([...set, rooms[0]]));
                 user.rooms.push(rooms[0]);
                 console.log(user);
@@ -91,6 +94,35 @@ export default function Chat() {
                 window.alert("Você entrou na sala!");
 
             } catch (error) {
+                console.log(error)
+                
+            }
+        }
+    }
+
+    const create = async () => {
+        if(createRoom){
+            console.log(createRoom)
+            try{
+                const user = JSON.parse(localStorage.getItem('user'));
+                const res = await axios.post("http://localhost:3333/createRoom", {
+                    roomName: createRoom,
+                    userId: user.userId
+                })
+                if(res.data.status === 500){
+                    window.alert(res.data.message);
+                    return;
+                }
+                else if(res.data.status === 400){
+                    window.alert(res.data.message);
+                    return;
+                }
+                setRooms((set) =>([...set, res.data]));
+                user.rooms.push(res.data);
+                localStorage.setItem("user", JSON.stringify(user));
+
+                window.alert("Sala criada com sucesso!")
+            }catch(error){
                 console.log(error)
             }
         }
@@ -103,7 +135,7 @@ export default function Chat() {
                     <div id="messageList">
                         <p>{currentRoom}</p>
                         {messages.map((message, index) => (
-                            <p key={index} className={message.type === 'Geral' ? 'global' : message.sender ? "sender" : "reciver"}>
+                            <p key={index} className={message.type === 'Geral' ? 'global2' : message.sender ? "sender" : "reciver"}>
                                 {message.type === "Geral" ? `${message.username} ${message.content}` : message.sender ? message.content : `${message.username}: ${message.content}`}
                             </p>
                         ))}
@@ -112,6 +144,10 @@ export default function Chat() {
                 </main>
                 <aside>
                     <h3>Salas</h3>
+                    <div className="modal">
+                        <input id="room" type="text" placeholder="nome da sala" onChange={(e) => setSearchRoom(e.target.value)}/>
+                        <button onClick={search}>Entrar</button>
+                    </div>
                     {rooms.map(room => (
                         <div className="cardChat" key={room._id} onClick={() => handleRoomClick(room.name)}>
                             <img src={img1} style={{ width: '25px', margin: "8px" }} />
@@ -119,15 +155,10 @@ export default function Chat() {
                         </div>
                     ))}
 
+                    
                     <div className="modal">
-                        <input id="room" type="texte" placeholder="pesquisar" onChange={(e) => setSearchRoom(e.target.value)}/>
-                        <button onClick={search}>Buscar</button>
-                    </div>
-
-                    {/*-- pesquisar */}
-                    <div>
-                        <button id="pesquisar">Pesquisar</button>
-                        <button id="criar">Criar sala</button>
+                        <input id="createRoom" type="text" placeholder="nome da sala" onChange={(e) => setCreateRoom(e.target.value)}/>
+                        <button onClick={create}>Criar</button>
                     </div>
                 </aside>
             </div>
