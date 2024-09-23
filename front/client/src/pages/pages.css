@@ -80,4 +80,57 @@
         justify-content: center;
         align-items: center;
     }
+
+    /* Estilização do campo de busca */
+.search-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.search-input:focus {
+    border-color: #007bff;
+}
+
+/* Estilo da lista de salas (cards) */
+.cardChat {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cardChat:hover {
+    background-color: #f0f0f0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Ícone da sala */
+.cardChat img {
+    margin-right: 10px;
+}
+
+/* Nome da sala dentro do card */
+.cardChat:hover {
+    color: #007bff;
+}
+
+/* Mensagem de nenhuma sala encontrada */
+p {
+    color: #999;
+    font-size: 14px;
+    text-align: center;
+    margin-top: 20px;
+}
+
 }

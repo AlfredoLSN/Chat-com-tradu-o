@@ -11,6 +11,7 @@ export default function Chat() {
     const [currentRoom, setCurrentRoom] = useState(null);
     const [messages, setMessages] = useState([]);
     const [rooms, setRooms] = useState([]);
+    const [searchRoom, setSearchRoom] = useState('');
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
@@ -60,11 +61,47 @@ export default function Chat() {
         socket.emit("joinRoom", {roomName: roomName, username: user.username, language: user.language});
     };
 
+    const search = async () => {
+        if(searchRoom) {
+             console.log(searchRoom)
+
+            try {
+                let roomSearch = await axios.get(`http://localhost:3333/room/${searchRoom}`);
+                let rooms = roomSearch.data;                 
+                if(rooms.length === 0) {
+                    window.alert("Sala não encontrada!");
+                    return;
+                }
+                
+                
+                const user = JSON.parse(localStorage.getItem('user'));
+                const exist = user.rooms.find(room => room._id === rooms[0]._id);
+
+                if(exist) {
+                    window.alert("Você já está na sala.");
+                    return
+                }
+                socket.emit("joinRoom", {roomName: rooms[0].name, username: user.username, language: user.language});
+
+                setRooms((set) =>([...set, rooms[0]]));
+                user.rooms.push(rooms[0]);
+                console.log(user);
+                localStorage.setItem("user", JSON.stringify(user));
+
+                window.alert("Você entrou na sala!");
+
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    }
+
     return (
         <div className="container-type-1">
             <div className="container-type-2">
                 <main>
                     <div id="messageList">
+                        <p>{currentRoom}</p>
                         {messages.map((message, index) => (
                             <p key={index} className={message.type === 'Geral' ? 'global' : message.sender ? "sender" : "reciver"}>
                                 {message.type === "Geral" ? `${message.username} ${message.content}` : message.sender ? message.content : `${message.username}: ${message.content}`}
@@ -82,9 +119,15 @@ export default function Chat() {
                         </div>
                     ))}
 
+                    <div className="modal">
+                        <input id="room" type="texte" placeholder="pesquisar" onChange={(e) => setSearchRoom(e.target.value)}/>
+                        <button onClick={search}>Buscar</button>
+                    </div>
+
                     {/*-- pesquisar */}
                     <div>
-                        teste
+                        <button id="pesquisar">Pesquisar</button>
+                        <button id="criar">Criar sala</button>
                     </div>
                 </aside>
             </div>
