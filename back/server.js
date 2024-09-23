@@ -138,6 +138,7 @@ io.on("connection", (socket) => {
             //TODO
             if (!room) {
                 console.log("Sala não Encontrada");
+                return;
             }
             // Adiciona o usuário à sala no MongoDB
             //room.users.push(socket.id);
