@@ -74,7 +74,7 @@ export default function Chat() {
       }
     });
 
-    // Remove o listener ao desmontar o componente
+   
     return () => socket.off("message");
   }, [socket]);
 
