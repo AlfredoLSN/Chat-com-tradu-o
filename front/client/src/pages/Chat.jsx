@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 
 
-const socket = io("http://localhost:3333");
+const socket = io("https://chat-back-deploy.onrender.com");
 
 export default function Chat() {
   // Estado para a sala atual
@@ -54,7 +54,7 @@ export default function Chat() {
 
       try {
         // Faz a tradução da mensagem recebida para a linguagem do usuário atual
-        translate = await axios.post(`http://localhost:3333/translate`, {
+        translate = await axios.post(`https://chat-back-deploy.onrender.com/translate`, {
           msg: data.message,
           lang2: currentUser.language,
         });
@@ -81,17 +81,21 @@ export default function Chat() {
   // Função para lidar com a troca de salas
   const handleRoomClick = (roomName) => {
     const user = JSON.parse(localStorage.getItem("user"));
+    if(currentRoom !== roomName){
+      socket.emit("stopListen", currentRoom)
 
-    // Define a sala atual e limpa as mensagens anteriores
-    setCurrentRoom(roomName);
-    setMessages([]);
+      // Define a sala atual e limpa as mensagens anteriores
+      setCurrentRoom(roomName);
+      setMessages([]);
+      
+      // Emite a entrada na sala para o servidor
+      socket.emit("joinRoom", {
+        roomName: roomName,
+        username: user.username,
+        language: user.language,
+      });
+    }
     
-    // Emite a entrada na sala para o servidor
-    socket.emit("joinRoom", {
-      roomName: roomName,
-      username: user.username,
-      language: user.language,
-    });
   };
 
   // Função para buscar uma sala
@@ -99,7 +103,7 @@ export default function Chat() {
     if (searchRoom) {
       try {
         let roomSearch = await axios.get(
-          `http://localhost:3333/room/${searchRoom}`
+          `https://chat-back-deploy.onrender.com/room/${searchRoom}`
         );
         let rooms = roomSearch.data;
         if (rooms.length === 0) {
@@ -133,7 +137,7 @@ export default function Chat() {
     if (createRoom) {
       try {
         const user = JSON.parse(localStorage.getItem("user"));
-        const res = await axios.post("http://localhost:3333/createRoom", {
+        const res = await axios.post("https://chat-back-deploy.onrender.com/createRoom", {
           roomName: createRoom,
           userId: user.userId,
         });
