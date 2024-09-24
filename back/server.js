@@ -201,6 +201,24 @@ io.on("connection", (socket) => {
         }
     });
 
+    socket.on("stopListen", async (roomName) => {
+        if (!socket.userId) {
+            return;
+        }
+
+        try {
+            const room = await Room.findOne({ name: roomName });
+            if (room) {
+                socket.leave(roomName);
+                console.log(
+                    `Usuário ${socket.userId} parou de escutar a sala: ${roomName}`
+                );
+            }
+        } catch (error) {
+            console.error("Erro ao parar de escutar a sala:", error);
+        }
+    });
+
     socket.on(
         "chatMessage",
         async ({ roomName, message, username, language }) => {
