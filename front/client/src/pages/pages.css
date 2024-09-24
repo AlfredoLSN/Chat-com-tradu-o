@@ -14,81 +14,107 @@
     background-color: antiquewhite;
     width: 80%;
     border-radius: 1rem;
+}
 
-    main {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        width: 55vw;
-        background-color: rgb(211, 207, 207);
-        border-top-left-radius: 1rem;
-        border-bottom-left-radius: 1rem;
-    }
-    
-    aside {
-        border-top-right-radius: 1rem;
-        border-bottom-right-radius: 1rem;
-        background-color: rgb(194, 188, 181);
-        width: 25vw;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        overflow-x: hidden;
-        overflow-y: auto;
+main {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 55vw;
+    background-color: rgb(211, 207, 207);
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+}
 
-        h3 {
-            display: block;
-            box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1),0px 10px 15px -3px rgba(0,0,0,0.1);
-            width: 100%;
-            text-align: center;
-            position: relative;
-            padding: 5px;
-            text-transform: uppercase;
-            margin-bottom: 5px;
-        }
-    }
+aside {
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    background-color: rgb(194, 188, 181);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
 
-    .cardChat {
-        width: 100%;
-        background-color: rgb(208, 214, 219);
-        padding: 5px;
-        margin: 2px;
-        text-transform: uppercase;
-        font-size: small;
-        font-weight:700;
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        border-radius: 0.2rem;
+.asideMessage {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: 25vw;
+    align-items: center;
+    padding: 1px;
+}
 
-        &:hover {
-            background-color: rgb(145, 109, 146);
-            color: rgb(29, 171, 236);
-        }
-        
-    }
+.headerAside{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1),0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    text-align: center;
+    position: relative;
+    padding: 5px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
 
-    .sender {
-        display: block;
-        align-self: flex-end;
-        text-align: end;
-        margin-right: 5px;
-    }
+.cardChat {
+    width: 100%;
+    background-color: rgb(208, 214, 219);
+    padding: 5px;
+    margin: 2px;
+    text-transform: uppercase;
+    font-size: small;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 0.2rem;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
 
-    .reciver {
-        display: block;
-        align-self: flex-start;
-        text-align: start;
-        margin-left: 5px;
-    }
+.cardChat:hover {
+    background-color: rgb(145, 109, 146);
+    color: rgb(29, 171, 236);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
-    .global2 {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+.sender {
+    display: block;
+    align-self: flex-end;
+    text-align: end;
+    margin-right: 5px;
+    background-color: #d1e7dd;
+    color: #000; 
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    max-width: 60%;
+}
 
-    /* Estilização do campo de busca */
+.reciver {
+    display: block;
+    align-self: flex-start;
+    text-align: start;
+    margin-left: 5px;
+    background-color: #f8d7da; 
+    color: #000; 
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    max-width: 60%;
+}
+
+.global2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Estilização do campo de busca */
 .search-input {
     width: 100%;
     padding: 10px;
@@ -104,22 +130,67 @@
     border-color: #007bff;
 }
 
-/* Estilo da lista de salas (cards) */
-.cardChat {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-    cursor: pointer;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+/* Mensagem de nenhuma sala encontrada */
+p {
+    color: #999;
+    font-size: 14px;
+    text-align: center;
+    margin-top: 20px;
 }
 
-.cardChat:hover {
-    background-color: #f0f0f0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+/* Estilos para modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    border-radius: 8px;
+}
+
+.modal.show {
+    display: block;
+}
+
+/* Estilos para sobreposição de fundo */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+/* Botões dentro dos modais */
+.modal button {
+    margin: 10px 5px;
+    padding: 10px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.modal button:hover {
+    background-color: #0056b3;
+}
+
+.modal input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
 }
 
 /* Ícone da sala */
@@ -132,12 +203,47 @@
     color: #007bff;
 }
 
-/* Mensagem de nenhuma sala encontrada */
-p {
-    color: #999;
-    font-size: 14px;
-    text-align: center;
-    margin-top: 20px;
+#messageList {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 
+.buttons {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 10px; 
 }
+
+.buttons button {
+    flex: 1;
+    max-width: 160px;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border: none;
+    margin: 8px;
+}
+
+.buttons button:hover {
+    background-color: #0056b3;
+}
+
+.logoutButton {
+    background-color: #ff4c4c;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+  
+  .logoutButton:hover {
+    background-color: #ff1c1c;
+  }
+  

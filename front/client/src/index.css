@@ -30,34 +30,3 @@ label {
     display: flex;
     flex-direction: column;
 }
-
-/* Estilizando a scrollbar no Chrome, Edge e Safari */
-::-webkit-scrollbar {
-    width: 3px; /* largura da scrollbar */
-}
-
-::-webkit-scrollbar-track {
-    background: #6b6b6b; /* cor de fundo da track */
-}
-
-::-webkit-scrollbar-thumb {
-    background: #888; /* cor do thumb (barra de rolagem) */
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #555; /* cor do thumb quando hover */
-}
-
-* {
-    scrollbar-color: #888 #444343;
-    scrollbar-width: thin; /* largura da scrollbar */
-}
-
-/* Thumb */
-*::-webkit-scrollbar-thumb {
-    background: #888; /* cor do thumb */
-}
-
-*::-webkit-scrollbar-thumb:hover {
-    background: #555; /* cor do thumb quando hover */
-}
